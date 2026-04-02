@@ -6,228 +6,202 @@
 <title>Suyash Degaonkar | VLSI Engineer</title>
 <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600;700&display=swap" rel="stylesheet"/>
 <style>
-:root {
-  --bg: #04080c;
-  --bg2: #08121a;
-  --bg3: #0c1c28;
-  --trace: #00ff88;
-  --trace2: #00ccff;
-  --accent: #ff6b35;
-  --dim: #1a3a2a;
-  --text: #c8e6d8;
-  --muted: #4a7a6a;
-  --chip: #0a1820;
+:root{
+  --bg:#02060a;--bg2:#060e16;--bg3:#0a1828;
+  --gold:#f5c842;--gold2:#ffaa00;
+  --copper:#e8874a;--copper2:#c05a20;
+  --via:#a0c4ff;--via2:#5b8fff;
+  --green:#00ff88;--cyan:#00d4ff;
+  --text:#e8d5b0;--muted:#7a6a50;--chip:#0a1218;
 }
 *{margin:0;padding:0;box-sizing:border-box;}
 html{scroll-behavior:smooth;}
-body{background:var(--bg);color:var(--text);font-family:'Rajdhani',sans-serif;overflow-x:hidden;cursor:crosshair;}
+body{background:var(--bg);color:var(--text);font-family:'Rajdhani',sans-serif;overflow-x:hidden;}
 
-/* scanlines */
-body::after{content:'';position:fixed;inset:0;z-index:1;pointer-events:none;
-  background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,255,136,0.012) 2px,rgba(0,255,136,0.012) 4px);}
+#chip-canvas{position:fixed;inset:0;z-index:0;pointer-events:none;}
 
-/* circuit bg */
-.cbg{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.13;
-  background-image:
-    linear-gradient(rgba(0,255,136,.15) 1px,transparent 1px),
-    linear-gradient(90deg,rgba(0,255,136,.15) 1px,transparent 1px),
-    linear-gradient(rgba(0,204,255,.07) 1px,transparent 1px),
-    linear-gradient(90deg,rgba(0,204,255,.07) 1px,transparent 1px);
-  background-size:80px 80px,80px 80px,20px 20px,20px 20px;}
+body::before{content:'';position:fixed;inset:0;z-index:1;pointer-events:none;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  opacity:.4;}
 
-/* NAV */
 nav{position:fixed;top:0;left:0;right:0;z-index:200;
   display:flex;align-items:center;justify-content:space-between;
   padding:.9rem 3rem;
-  background:rgba(4,8,12,.9);backdrop-filter:blur(16px);
-  border-bottom:1px solid rgba(0,255,136,.12);}
-.nl{font-family:'Orbitron',monospace;font-size:.85rem;font-weight:900;
-  color:var(--trace);letter-spacing:3px;}
-.nl span{color:var(--trace2);}
+  background:rgba(2,6,10,.92);backdrop-filter:blur(20px);
+  border-bottom:1px solid rgba(245,200,66,.15);}
+.nl{font-family:'Orbitron',monospace;font-size:.9rem;font-weight:900;
+  color:var(--gold);letter-spacing:3px;}
+.nl span{color:var(--copper);}
 .nr{display:flex;gap:2rem;align-items:center;}
 .nr a{font-family:'Share Tech Mono',monospace;font-size:.68rem;color:var(--muted);
   text-decoration:none;letter-spacing:2px;text-transform:uppercase;transition:color .2s;}
-.nr a:hover{color:var(--trace);}
-.nr .hire{
-  font-family:'Share Tech Mono',monospace;font-size:.68rem;letter-spacing:2px;
-  padding:.45rem 1.2rem;background:var(--trace);color:#000;border:none;cursor:pointer;
-  text-transform:uppercase;clip-path:polygon(6px 0%,100% 0%,calc(100% - 6px) 100%,0% 100%);}
+.nr a:hover{color:var(--gold);}
+.hire-btn{font-family:'Share Tech Mono',monospace;font-size:.68rem;letter-spacing:2px;
+  padding:.45rem 1.3rem;background:var(--gold);color:#000;border:none;cursor:pointer;
+  text-transform:uppercase;clip-path:polygon(6px 0%,100% 0%,calc(100% - 6px) 100%,0% 100%);
+  font-weight:700;transition:box-shadow .3s;}
+.hire-btn:hover{box-shadow:0 0 25px rgba(245,200,66,.5);}
 
-/* HERO */
 .hero{position:relative;z-index:10;min-height:100vh;
   display:flex;flex-direction:column;justify-content:center;padding:0 5rem;}
-.hero-eyebrow{font-family:'Share Tech Mono',monospace;font-size:.68rem;color:var(--trace2);
-  letter-spacing:5px;margin-bottom:1rem;display:flex;align-items:center;gap:.75rem;
-  opacity:0;animation:fadeUp .6s .1s ease forwards;}
-.hero-eyebrow::before{content:'';width:48px;height:1px;background:var(--trace2);}
+.hero-tag{font-family:'Share Tech Mono',monospace;font-size:.68rem;color:var(--copper);
+  letter-spacing:5px;margin-bottom:1.2rem;display:flex;align-items:center;gap:.8rem;
+  opacity:0;animation:fup .6s .1s ease forwards;}
+.hero-tag::before{content:'';width:50px;height:1px;background:var(--copper);}
 .hero h1{font-family:'Orbitron',monospace;font-weight:900;
-  font-size:clamp(2.8rem,6.5vw,6rem);line-height:.95;color:#fff;
-  text-shadow:0 0 60px rgba(0,255,136,.2);margin-bottom:.8rem;
-  opacity:0;animation:fadeUp .6s .25s ease forwards;}
-.hero h1 em{font-style:normal;color:var(--trace);
-  text-shadow:0 0 40px rgba(0,255,136,.5);}
-.hero-role{font-family:'Rajdhani',sans-serif;font-size:clamp(1rem,2vw,1.35rem);
+  font-size:clamp(2.8rem,6.5vw,6rem);line-height:.92;color:#fff;margin-bottom:.9rem;
+  opacity:0;animation:fup .6s .25s ease forwards;}
+.hero h1 em{font-style:normal;color:var(--gold);text-shadow:0 0 40px rgba(245,200,66,.4);}
+.hero-role{font-family:'Rajdhani',sans-serif;font-size:clamp(1rem,2vw,1.3rem);
   color:var(--muted);font-weight:300;letter-spacing:3px;margin-bottom:.5rem;
-  opacity:0;animation:fadeUp .6s .38s ease forwards;}
-.hero-loc{font-family:'Share Tech Mono',monospace;font-size:.72rem;color:rgba(0,204,255,.6);
+  opacity:0;animation:fup .6s .38s ease forwards;}
+.hero-loc{font-family:'Share Tech Mono',monospace;font-size:.72rem;color:rgba(0,212,255,.6);
   letter-spacing:2px;margin-bottom:2.5rem;
-  opacity:0;animation:fadeUp .6s .48s ease forwards;}
-.hero-cta{display:flex;gap:1rem;
-  opacity:0;animation:fadeUp .6s .58s ease forwards;}
-.btn-p{font-family:'Share Tech Mono',monospace;font-size:.75rem;letter-spacing:2px;
-  padding:.85rem 2.2rem;background:var(--trace);color:#000;border:none;cursor:pointer;
-  text-transform:uppercase;clip-path:polygon(8px 0%,100% 0%,calc(100% - 8px) 100%,0% 100%);
+  opacity:0;animation:fup .6s .48s ease forwards;}
+.hero-cta{display:flex;gap:1rem;opacity:0;animation:fup .6s .58s ease forwards;}
+.btn-gold{font-family:'Share Tech Mono',monospace;font-size:.75rem;letter-spacing:2px;
+  padding:.85rem 2.2rem;background:var(--gold);color:#000;border:none;cursor:pointer;
+  text-transform:uppercase;font-weight:700;
+  clip-path:polygon(8px 0%,100% 0%,calc(100% - 8px) 100%,0% 100%);
   transition:box-shadow .3s,transform .2s;}
-.btn-p:hover{box-shadow:0 0 35px rgba(0,255,136,.55);transform:translateY(-2px);}
-.btn-s{font-family:'Share Tech Mono',monospace;font-size:.75rem;letter-spacing:2px;
-  padding:.85rem 2.2rem;background:transparent;color:var(--trace2);
-  border:1px solid rgba(0,204,255,.4);cursor:pointer;text-transform:uppercase;
-  transition:all .3s;}
-.btn-s:hover{background:rgba(0,204,255,.08);box-shadow:0 0 20px rgba(0,204,255,.2);}
+.btn-gold:hover{box-shadow:0 0 35px rgba(245,200,66,.5);transform:translateY(-2px);}
+.btn-out{font-family:'Share Tech Mono',monospace;font-size:.75rem;letter-spacing:2px;
+  padding:.85rem 2.2rem;background:transparent;color:var(--copper);
+  border:1px solid rgba(232,135,74,.4);cursor:pointer;text-transform:uppercase;transition:all .3s;}
+.btn-out:hover{background:rgba(232,135,74,.08);box-shadow:0 0 20px rgba(232,135,74,.2);}
 
-/* corner deco */
-.cc{position:absolute;width:100px;height:100px;border:1px solid rgba(0,255,136,.2);}
+.cc{position:absolute;width:90px;height:90px;border:1px solid rgba(245,200,66,.2);}
 .cc.tl{top:5.5rem;left:2rem;border-right:none;border-bottom:none;}
 .cc.br{bottom:1.5rem;right:2rem;border-left:none;border-top:none;}
 
-/* STATUS BAR */
 .sbar{position:relative;z-index:10;display:flex;
-  border-top:1px solid rgba(0,255,136,.1);border-bottom:1px solid rgba(0,255,136,.1);
+  border-top:1px solid rgba(245,200,66,.1);border-bottom:1px solid rgba(245,200,66,.1);
   background:var(--bg2);}
-.sb{flex:1;padding:1.4rem 2rem;border-right:1px solid rgba(0,255,136,.08);
+.sb{flex:1;padding:1.4rem 2rem;border-right:1px solid rgba(245,200,66,.07);
   display:flex;flex-direction:column;gap:.3rem;}
 .sb:last-child{border-right:none;}
-.sbn{font-family:'Orbitron',monospace;font-size:1.6rem;font-weight:700;color:var(--trace);}
+.sbn{font-family:'Orbitron',monospace;font-size:1.6rem;font-weight:700;color:var(--gold);}
 .sbl{font-family:'Share Tech Mono',monospace;font-size:.6rem;color:var(--muted);
   letter-spacing:2px;text-transform:uppercase;}
 
-/* SECTIONS */
 section{position:relative;z-index:10;padding:5rem 4rem;}
 .sh{display:flex;align-items:center;gap:1rem;margin-bottom:3rem;}
-.sn{font-family:'Share Tech Mono',monospace;font-size:.68rem;color:var(--trace);letter-spacing:2px;}
-.st{font-family:'Orbitron',monospace;font-size:1.3rem;font-weight:700;color:#fff;
+.snum{font-family:'Share Tech Mono',monospace;font-size:.68rem;color:var(--gold);letter-spacing:2px;}
+.stitle{font-family:'Orbitron',monospace;font-size:1.3rem;font-weight:700;color:#fff;
   letter-spacing:3px;text-transform:uppercase;}
-.sl{flex:1;height:1px;background:linear-gradient(to right,rgba(0,255,136,.3),transparent);}
+.sline{flex:1;height:1px;background:linear-gradient(to right,rgba(245,200,66,.3),transparent);}
 
-/* ABOUT */
 .agrid{display:grid;grid-template-columns:1.3fr 1fr;gap:4rem;align-items:start;}
 .atext p{font-size:1.05rem;line-height:1.85;color:var(--text);margin-bottom:1.1rem;font-weight:300;}
-.atext p strong{color:var(--trace);font-weight:600;}
-.atext p em{color:var(--trace2);font-style:normal;}
-.edu-block{margin-top:1.5rem;}
-.edu-card{background:var(--chip);border:1px solid rgba(0,255,136,.12);
+.atext p strong{color:var(--gold);font-weight:600;}
+.atext p em{color:var(--copper);font-style:normal;}
+.edu-card{background:var(--chip);border:1px solid rgba(245,200,66,.12);
   padding:1.2rem 1.5rem;margin-bottom:.75rem;position:relative;overflow:hidden;}
-.edu-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--trace);}
-.edu-school{font-family:'Orbitron',monospace;font-size:.8rem;font-weight:700;color:#fff;margin-bottom:.3rem;}
-.edu-deg{font-size:.9rem;color:var(--trace2);margin-bottom:.25rem;}
+.edu-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--gold);}
+.edu-school{font-family:'Orbitron',monospace;font-size:.78rem;font-weight:700;color:#fff;margin-bottom:.3rem;}
+.edu-deg{font-size:.9rem;color:var(--copper);margin-bottom:.25rem;}
 .edu-date{font-family:'Share Tech Mono',monospace;font-size:.65rem;color:var(--muted);letter-spacing:1px;}
+.coursework{font-family:'Share Tech Mono',monospace;font-size:.65rem;color:var(--muted);
+  letter-spacing:1.5px;margin-top:1rem;padding-left:.25rem;line-height:2;}
 
-/* SKILLS */
 .skills-bg{background:var(--bg2);}
 .skills-cats{display:grid;grid-template-columns:repeat(2,1fr);gap:1.5rem;}
-.scat{background:var(--bg);border:1px solid rgba(0,255,136,.1);padding:1.5rem;}
-.scat-title{font-family:'Share Tech Mono',monospace;font-size:.68rem;color:var(--trace);
+.scat{background:var(--bg);border:1px solid rgba(245,200,66,.1);padding:1.5rem;}
+.scat-title{font-family:'Share Tech Mono',monospace;font-size:.68rem;color:var(--gold);
   letter-spacing:3px;text-transform:uppercase;margin-bottom:1rem;
   display:flex;align-items:center;gap:.5rem;}
-.scat-title::before{content:'//';color:var(--trace2);font-size:.6rem;}
-.scat-pills{display:flex;flex-wrap:wrap;gap:.5rem;}
+.scat-title::before{content:'//';color:var(--copper);font-size:.6rem;}
+.pills{display:flex;flex-wrap:wrap;gap:.5rem;}
 .pill{font-family:'Share Tech Mono',monospace;font-size:.65rem;padding:.35rem .75rem;
-  background:rgba(0,255,136,.05);border:1px solid rgba(0,255,136,.18);
+  background:rgba(245,200,66,.05);border:1px solid rgba(245,200,66,.18);
   color:var(--text);letter-spacing:1px;transition:all .2s;}
-.pill:hover{border-color:var(--trace);color:var(--trace);background:rgba(0,255,136,.08);}
-.pill.blue{background:rgba(0,204,255,.05);border-color:rgba(0,204,255,.2);color:var(--trace2);}
-.pill.blue:hover{border-color:var(--trace2);background:rgba(0,204,255,.1);}
+.pill:hover{border-color:var(--gold);color:var(--gold);background:rgba(245,200,66,.08);}
+.pill.cop{background:rgba(232,135,74,.05);border-color:rgba(232,135,74,.2);color:var(--copper);}
+.pill.cop:hover{border-color:var(--copper);background:rgba(232,135,74,.1);}
 
-/* EXPERIENCE */
 .exp-list{display:flex;flex-direction:column;gap:1.5rem;}
-.exp-card{background:var(--chip);border:1px solid rgba(0,255,136,.1);padding:2rem;
+.exp-card{background:var(--chip);border:1px solid rgba(245,200,66,.1);padding:2rem;
   position:relative;overflow:hidden;transition:border-color .3s;}
 .exp-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;
-  background:linear-gradient(to right,var(--trace),var(--trace2));
+  background:linear-gradient(to right,var(--gold),var(--copper));
   transform:scaleX(0);transform-origin:left;transition:transform .4s;}
-.exp-card:hover{border-color:rgba(0,255,136,.3);}
+.exp-card:hover{border-color:rgba(245,200,66,.3);}
 .exp-card:hover::before{transform:scaleX(1);}
-.exp-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:1rem;flex-wrap:wrap;gap:.5rem;}
+.exp-hdr{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:1rem;flex-wrap:wrap;gap:.5rem;}
 .exp-co{font-family:'Orbitron',monospace;font-size:.95rem;font-weight:700;color:#fff;}
-.exp-date{font-family:'Share Tech Mono',monospace;font-size:.65rem;color:var(--trace);
-  letter-spacing:2px;padding:.3rem .8rem;border:1px solid rgba(0,255,136,.25);}
-.exp-role{font-size:.9rem;color:var(--trace2);margin-bottom:1rem;font-weight:600;letter-spacing:1px;}
-.exp-bullets{list-style:none;display:flex;flex-direction:column;gap:.55rem;}
-.exp-bullets li{font-size:.9rem;color:var(--text);line-height:1.6;font-weight:300;
+.exp-dt{font-family:'Share Tech Mono',monospace;font-size:.65rem;color:var(--gold);
+  letter-spacing:2px;padding:.3rem .8rem;border:1px solid rgba(245,200,66,.25);}
+.exp-role{font-size:.9rem;color:var(--copper);margin-bottom:1rem;font-weight:600;letter-spacing:1px;}
+.exp-ul{list-style:none;display:flex;flex-direction:column;gap:.55rem;}
+.exp-ul li{font-size:.9rem;color:var(--text);line-height:1.6;font-weight:300;
   padding-left:1.2rem;position:relative;}
-.exp-bullets li::before{content:'▸';position:absolute;left:0;color:var(--trace);font-size:.7rem;}
-.exp-bullets li strong{color:var(--trace);font-weight:600;}
+.exp-ul li::before{content:'▸';position:absolute;left:0;color:var(--gold);font-size:.7rem;}
+.exp-ul li strong{color:var(--gold);font-weight:600;}
 
-/* PROJECTS */
 .proj-bg{background:var(--bg2);}
 .pgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.25rem;}
-.pcard{background:var(--bg);border:1px solid rgba(0,255,136,.1);padding:1.6rem;
-  position:relative;overflow:hidden;transition:border-color .3s,transform .3s;cursor:default;}
+.pcard{background:var(--bg);border:1px solid rgba(245,200,66,.1);padding:1.6rem;
+  position:relative;overflow:hidden;transition:border-color .3s,transform .3s;}
 .pcard::after{content:'';position:absolute;top:0;left:0;right:0;height:2px;
-  background:linear-gradient(to right,var(--trace),var(--trace2));
+  background:linear-gradient(to right,var(--gold),var(--copper));
   transform:scaleX(0);transform-origin:left;transition:transform .4s;}
-.pcard:hover{border-color:rgba(0,255,136,.35);transform:translateY(-4px);}
+.pcard:hover{border-color:rgba(245,200,66,.35);transform:translateY(-4px);}
 .pcard:hover::after{transform:scaleX(1);}
-.ptag{font-family:'Share Tech Mono',monospace;font-size:.6rem;color:var(--trace);
+.ptag{font-family:'Share Tech Mono',monospace;font-size:.6rem;color:var(--gold);
   letter-spacing:2px;text-transform:uppercase;margin-bottom:.6rem;
   display:flex;align-items:center;gap:.4rem;}
-.ptag::before{content:'';width:18px;height:1px;background:var(--trace);}
+.ptag::before{content:'';width:16px;height:1px;background:var(--gold);}
 .ptitle{font-family:'Orbitron',monospace;font-size:.85rem;font-weight:700;color:#fff;
   margin-bottom:.7rem;line-height:1.3;}
-.pdesc{font-size:.88rem;color:var(--muted);line-height:1.65;font-weight:300;margin-bottom:1.1rem;}
-.pdesc strong{color:var(--trace2);}
+.pdesc{font-size:.88rem;color:var(--muted);line-height:1.65;font-weight:300;margin-bottom:1rem;}
+.pdesc strong{color:var(--copper);}
 .ptechs{display:flex;flex-wrap:wrap;gap:.35rem;}
 .tpill{font-family:'Share Tech Mono',monospace;font-size:.58rem;padding:.22rem .6rem;
-  background:rgba(0,204,255,.07);border:1px solid rgba(0,204,255,.2);color:var(--trace2);}
+  background:rgba(232,135,74,.07);border:1px solid rgba(232,135,74,.2);color:var(--copper);}
 .prank{position:absolute;top:1rem;right:1rem;
-  font-family:'Share Tech Mono',monospace;font-size:.6rem;color:var(--accent);
-  padding:.2rem .5rem;border:1px solid rgba(255,107,53,.3);letter-spacing:1px;}
+  font-family:'Share Tech Mono',monospace;font-size:.58rem;color:var(--gold);
+  padding:.2rem .5rem;border:1px solid rgba(245,200,66,.4);background:rgba(245,200,66,.06);letter-spacing:1px;}
 
-/* RESEARCH */
 .rlist{display:flex;flex-direction:column;gap:1.25rem;}
-.rcard{background:var(--chip);border:1px solid rgba(0,204,255,.12);padding:1.8rem;
-  position:relative;border-left:3px solid var(--trace2);}
+.rcard{background:var(--chip);border:1px solid rgba(232,135,74,.15);padding:1.8rem;
+  position:relative;border-left:3px solid var(--copper);}
 .rname{font-family:'Orbitron',monospace;font-size:.9rem;font-weight:700;color:#fff;margin-bottom:.4rem;}
 .rdesc{font-size:.92rem;color:var(--text);line-height:1.65;font-weight:300;}
-.rdesc strong{color:var(--trace2);}
+.rdesc strong{color:var(--gold);}
 .rbadge{position:absolute;top:1.2rem;right:1.5rem;
   font-family:'Share Tech Mono',monospace;font-size:.6rem;letter-spacing:2px;
-  padding:.3rem .8rem;background:rgba(255,107,53,.1);border:1px solid rgba(255,107,53,.3);color:var(--accent);}
+  padding:.3rem .8rem;background:rgba(245,200,66,.08);border:1px solid rgba(245,200,66,.3);color:var(--gold);}
 
-/* CONTACT */
 .cgrid{display:grid;grid-template-columns:1fr 1.2fr;gap:5rem;align-items:center;}
 .ctext h2{font-family:'Orbitron',monospace;font-size:1.9rem;font-weight:900;color:#fff;
   margin-bottom:.8rem;line-height:1.2;}
+.ctext h2 em{font-style:normal;color:var(--gold);}
 .ctext p{color:var(--muted);line-height:1.8;margin-bottom:1.8rem;}
 .clinks{display:flex;flex-direction:column;gap:.75rem;}
 .clink{font-family:'Share Tech Mono',monospace;font-size:.75rem;letter-spacing:1.5px;
-  color:var(--trace2);text-decoration:none;display:flex;align-items:center;gap:.75rem;
-  transition:color .2s;}
-.clink::before{content:'→';color:var(--trace);}
+  color:var(--copper);text-decoration:none;display:flex;align-items:center;gap:.75rem;transition:color .2s;}
+.clink::before{content:'→';color:var(--gold);}
 .clink:hover{color:#fff;}
 .cform{display:flex;flex-direction:column;gap:.85rem;}
 .cform input,.cform textarea{
-  background:var(--chip);border:1px solid rgba(0,255,136,.12);
+  background:var(--chip);border:1px solid rgba(245,200,66,.12);
   color:var(--text);font-family:'Rajdhani',sans-serif;font-size:1rem;
   padding:.8rem 1.1rem;outline:none;transition:border-color .2s;resize:none;}
-.cform input:focus,.cform textarea:focus{border-color:rgba(0,255,136,.45);}
+.cform input:focus,.cform textarea:focus{border-color:rgba(245,200,66,.45);}
 .cform textarea{height:100px;}
 .cform ::placeholder{color:var(--muted);}
 
-/* FOOTER */
 footer{position:relative;z-index:10;padding:1.8rem 4rem;
-  border-top:1px solid rgba(0,255,136,.08);background:var(--bg2);
+  border-top:1px solid rgba(245,200,66,.08);background:var(--bg2);
   display:flex;justify-content:space-between;align-items:center;}
 .fl{font-family:'Orbitron',monospace;font-size:.7rem;color:var(--muted);letter-spacing:3px;}
-.fr{font-family:'Share Tech Mono',monospace;font-size:.62rem;color:rgba(74,122,106,.45);letter-spacing:1px;}
+.fr{font-family:'Share Tech Mono',monospace;font-size:.62rem;color:rgba(122,106,80,.4);letter-spacing:1px;}
 
-/* ANIMATIONS */
-@keyframes fadeUp{from{opacity:0;transform:translateY(28px);}to{opacity:1;transform:translateY(0);}}
+@keyframes fup{from{opacity:0;transform:translateY(28px);}to{opacity:1;transform:translateY(0);}}
 @keyframes blink{0%,100%{opacity:1;}50%{opacity:0;}}
-.blink{display:inline-block;width:3px;height:.9em;background:var(--trace);
+.blink{display:inline-block;width:3px;height:.9em;background:var(--gold);
   margin-left:4px;vertical-align:middle;animation:blink 1s step-end infinite;}
 
-/* RESPONSIVE */
 @media(max-width:960px){
   .pgrid{grid-template-columns:1fr 1fr;}
   .agrid,.cgrid{grid-template-columns:1fr;}
@@ -239,13 +213,13 @@ footer{position:relative;z-index:10;padding:1.8rem 4rem;
   .sb{min-width:50%;}
   footer{padding:1.5rem;flex-direction:column;gap:.5rem;text-align:center;}
 }
-@media(max-width:600px){.pgrid{grid-template-columns:1fr;}.nr .hire{display:none;}}
+@media(max-width:600px){.pgrid{grid-template-columns:1fr;}.nr .hire-btn{display:none;}}
 </style>
 </head>
 <body>
-<div class="cbg"></div>
 
-<!-- NAV -->
+<canvas id="chip-canvas"></canvas>
+
 <nav>
   <div class="nl">SD<span>::</span>VLSI</div>
   <div class="nr">
@@ -255,54 +229,51 @@ footer{position:relative;z-index:10;padding:1.8rem 4rem;
     <a href="#projects">Projects</a>
     <a href="#research">Research</a>
     <a href="#contact">Contact</a>
-    <button class="hire" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})">Hire Me</button>
+    <button class="hire-btn" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})">Hire Me</button>
   </div>
 </nav>
 
-<!-- HERO -->
 <section class="hero" id="home">
   <div class="cc tl"></div>
-  <div class="hero-eyebrow">MS EE · USC · VLSI / PHYSICAL DESIGN</div>
+  <div class="hero-tag">MS EE · USC · VLSI / PHYSICAL DESIGN</div>
   <h1>Suyash<br/><em>Degaonkar</em><span class="blink"></span></h1>
   <div class="hero-role">VLSI Engineer · Physical Design · RTL-to-GDSII</div>
   <div class="hero-loc">📍 Los Angeles, CA &nbsp;|&nbsp; sdegaonk@usc.edu &nbsp;|&nbsp; +1 (213) 696-4152</div>
   <div class="hero-cta">
-    <button class="btn-p" onclick="document.getElementById('projects').scrollIntoView({behavior:'smooth'})">View Projects</button>
-    <button class="btn-s" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})">Get In Touch</button>
+    <button class="btn-gold" onclick="document.getElementById('projects').scrollIntoView({behavior:'smooth'})">View Projects</button>
+    <button class="btn-out" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})">Get In Touch</button>
   </div>
   <div class="cc br"></div>
 </section>
 
-<!-- STATUS BAR -->
 <div class="sbar">
   <div class="sb"><div class="sbn">3+</div><div class="sbl">Years Experience</div></div>
   <div class="sb"><div class="sbn">40nm</div><div class="sbl">Min Node Worked</div></div>
   <div class="sb"><div class="sbn">6</div><div class="sbl">Academic Projects</div></div>
-  <div class="sb"><div class="sbn">97%</div><div class="sbl">Fault Coverage (ATPG)</div></div>
+  <div class="sb"><div class="sbn">97%</div><div class="sbl">Fault Coverage ATPG</div></div>
   <div class="sb"><div class="sbn">Top 3</div><div class="sbl">Systolic Array Design</div></div>
 </div>
 
-<!-- ABOUT -->
 <section id="about">
-  <div class="sh"><div class="sn">01</div><div class="st">About</div><div class="sl"></div></div>
+  <div class="sh"><div class="snum">01</div><div class="stitle">About</div><div class="sline"></div></div>
   <div class="agrid">
     <div class="atext">
-      <p>I'm <strong>Suyash Degaonkar</strong>, an MS Electrical Engineering student at <strong>USC</strong> specializing in <em>VLSI design</em>, physical design, and DFT. I operate at the intersection of silicon physics and system architecture — from transistor-level bit-cell design to full RTL-to-GDSII chip flows.</p>
-      <p>My internship at <strong>Western Semiconductor</strong> had me optimizing SRAM layouts for SoC L1/L2 cache, achieving <strong>1.43ns read access times</strong> and cutting bank area by ~23%. I've since then executed full custom layouts, physical verification, and automation using SKILL scripting.</p>
-      <p>Beyond the chip, I'm a maker at heart — with published research, an awarded innovation project, and a co-authored patent on sustainable engineering. I believe good hardware should be <strong>fast, small, and reliable</strong>.</p>
+      <p>I'm <strong>Suyash Degaonkar</strong>, an MS Electrical Engineering student at <strong>USC</strong> specializing in <em>VLSI design</em>, physical design, and DFT. From transistor-level bit-cell to full RTL-to-GDSII chip flows — I work at every layer of the silicon stack.</p>
+      <p>At <strong>Western Semiconductor</strong> I optimized SRAM layouts for SoC L1/L2 cache — achieving <strong>1.43ns read access time</strong> and cutting bank area by ~23% through bitline optimization and device physics.</p>
+      <p>Beyond the chip, I'm a maker — published in Springer, co-authored a patent, and won 10+ national awards. I believe great hardware is <strong>fast, dense, and signoff-clean</strong>.</p>
     </div>
-    <div class="edu-block">
+    <div>
       <div class="edu-card">
         <div class="edu-school">University of Southern California</div>
         <div class="edu-deg">M.S. Electrical Engineering</div>
         <div class="edu-date">AUG 2024 – MAY 2026 · Los Angeles, CA</div>
       </div>
-      <div class="edu-card">
+      <div class="edu-card" style="border-left-color:var(--copper)">
         <div class="edu-school">Walchand Institute of Technology</div>
         <div class="edu-deg">B.Tech, Electronics & Telecommunication</div>
         <div class="edu-date">AUG 2019 – JUN 2023 · India</div>
       </div>
-      <div style="font-family:'Share Tech Mono',monospace;font-size:.65rem;color:var(--muted);letter-spacing:1.5px;margin-top:1rem;padding-left:.25rem;">
+      <div class="coursework">
         ▸ EE477L: MOS VLSI · EE577A/B: VLSI System Design<br/>
         ▸ EE457: Computer Org · EE658: DFT · EE576: Memory Devices<br/>
         ▸ EE549: Nanotechnology
@@ -311,13 +282,12 @@ footer{position:relative;z-index:10;padding:1.8rem 4rem;
   </div>
 </section>
 
-<!-- SKILLS -->
 <section id="skills" class="skills-bg">
-  <div class="sh"><div class="sn">02</div><div class="st">Technical Skills</div><div class="sl"></div></div>
+  <div class="sh"><div class="snum">02</div><div class="stitle">Technical Skills</div><div class="sline"></div></div>
   <div class="skills-cats">
     <div class="scat">
       <div class="scat-title">Physical Design</div>
-      <div class="scat-pills">
+      <div class="pills">
         <span class="pill">40nm / 45nm</span><span class="pill">STA</span><span class="pill">PnR</span>
         <span class="pill">CTS</span><span class="pill">PPA</span><span class="pill">LVS</span>
         <span class="pill">DRC</span><span class="pill">EM/IR</span><span class="pill">SI</span>
@@ -326,16 +296,16 @@ footer{position:relative;z-index:10;padding:1.8rem 4rem;
     </div>
     <div class="scat">
       <div class="scat-title">VLSI & ASIC</div>
-      <div class="scat-pills">
-        <span class="pill blue">RTL-to-GDSII</span><span class="pill blue">CMOS</span>
-        <span class="pill blue">EDA / CAD</span><span class="pill blue">Analog</span>
-        <span class="pill blue">Digital Design</span><span class="pill blue">ASIC</span>
-        <span class="pill blue">Computer Architecture</span>
+      <div class="pills">
+        <span class="pill cop">RTL-to-GDSII</span><span class="pill cop">CMOS</span>
+        <span class="pill cop">EDA / CAD</span><span class="pill cop">Analog</span>
+        <span class="pill cop">Digital Design</span><span class="pill cop">ASIC</span>
+        <span class="pill cop">Computer Architecture</span>
       </div>
     </div>
     <div class="scat">
       <div class="scat-title">DFT</div>
-      <div class="scat-pills">
+      <div class="pills">
         <span class="pill">ATPG</span><span class="pill">Fault Modeling</span>
         <span class="pill">Scan Chain</span><span class="pill">BIST</span>
         <span class="pill">MBIST</span><span class="pill">JTAG</span>
@@ -344,11 +314,11 @@ footer{position:relative;z-index:10;padding:1.8rem 4rem;
     </div>
     <div class="scat">
       <div class="scat-title">Tools & Programming</div>
-      <div class="scat-pills">
-        <span class="pill blue">Cadence Virtuoso</span><span class="pill blue">Innovus</span>
-        <span class="pill blue">Voltus</span><span class="pill blue">Calibre</span>
-        <span class="pill blue">Synopsys PrimeTime</span><span class="pill blue">DC</span>
-        <span class="pill blue">ModelSim</span><span class="pill blue">HSPICE</span>
+      <div class="pills">
+        <span class="pill cop">Cadence Virtuoso</span><span class="pill cop">Innovus</span>
+        <span class="pill cop">Voltus</span><span class="pill cop">Calibre</span>
+        <span class="pill cop">Synopsys PrimeTime</span><span class="pill cop">DC</span>
+        <span class="pill cop">ModelSim</span><span class="pill cop">HSPICE</span>
         <span class="pill">Verilog</span><span class="pill">Tcl</span>
         <span class="pill">Perl</span><span class="pill">SKILL</span>
         <span class="pill">Python</span><span class="pill">C/C++</span>
@@ -357,135 +327,109 @@ footer{position:relative;z-index:10;padding:1.8rem 4rem;
   </div>
 </section>
 
-<!-- EXPERIENCE -->
 <section id="experience">
-  <div class="sh"><div class="sn">03</div><div class="st">Experience</div><div class="sl"></div></div>
+  <div class="sh"><div class="snum">03</div><div class="stitle">Experience</div><div class="sline"></div></div>
   <div class="exp-list">
     <div class="exp-card">
-      <div class="exp-header">
-        <div>
-          <div class="exp-co">Western Semiconductor</div>
-          <div class="exp-role">Physical Design Intern · Tempe, USA</div>
-        </div>
-        <div class="exp-date">MAY 2025 – AUG 2025</div>
+      <div class="exp-hdr">
+        <div><div class="exp-co">Western Semiconductor</div><div class="exp-role">Physical Design Intern · Tempe, USA</div></div>
+        <div class="exp-dt">MAY 2025 – AUG 2025</div>
       </div>
-      <ul class="exp-bullets">
-        <li>Developed SRAM layout for <strong>L1/L2 cache</strong> used in SoC IP blocks, achieving <strong>1.43ns read access time</strong> through bitline optimization and cutting ~23% bank area via layout optimization and device physics principles.</li>
-        <li>Optimized <strong>6T SRAM bit-cell layout</strong>, reducing pitch grid height & cell abutting, achieving <strong>120–180mV RSNM</strong> with high density.</li>
-        <li>Executed physical verification including <strong>DRC, LVS & PEX</strong>, resolving 100+ violations and delivering clean, signoff-ready, scalable layout.</li>
-        <li>Coordinated with cross-functional teams, clients, and investors ensuring all technical milestones were met on schedule.</li>
+      <ul class="exp-ul">
+        <li>Developed SRAM layout for <strong>L1/L2 cache</strong> in SoC IP blocks, achieving <strong>1.43ns read access time</strong> through bitline optimization — cutting ~23% bank area via layout optimization and device physics principles.</li>
+        <li>Optimized <strong>6T SRAM bit-cell layout</strong>, reducing pitch grid height &amp; cell abutting, achieving <strong>120–180mV RSNM</strong> with high density.</li>
+        <li>Executed physical verification — <strong>DRC, LVS &amp; PEX</strong> — resolving 100+ violations and delivering clean, signoff-ready scalable layout.</li>
+        <li>Coordinated with cross-functional teams, clients, and investors ensuring all technical milestones met on schedule.</li>
       </ul>
     </div>
     <div class="exp-card">
-      <div class="exp-header">
-        <div>
-          <div class="exp-co">Ashwath Engineering and Contractors</div>
-          <div class="exp-role">Standard Cell Physical Design Intern · India</div>
-        </div>
-        <div class="exp-date">OCT 2023 – MAR 2024</div>
+      <div class="exp-hdr">
+        <div><div class="exp-co">Ashwath Engineering and Contractors</div><div class="exp-role">Standard Cell Physical Design Intern · India</div></div>
+        <div class="exp-dt">OCT 2023 – MAR 2024</div>
       </div>
-      <ul class="exp-bullets">
-        <li>Constructed <strong>9T track-aligned standard cells</strong> with easy pin access & diffusion sharing, lowering area by ~10% while meeting timing.</li>
+      <ul class="exp-ul">
+        <li>Constructed <strong>9T track-aligned standard cells</strong> with easy pin access &amp; diffusion sharing, lowering area by ~10% while meeting timing.</li>
         <li>Delivered <strong>100% DRC/LVS clean</strong> full custom layouts in Cadence Virtuoso; modified PDK per DRM and project requirements.</li>
         <li>Performed parasitic extraction and validated timing arcs across PVT corners, maintaining <strong>~5% PEX-to-schematic delay correlation</strong>.</li>
       </ul>
     </div>
     <div class="exp-card">
-      <div class="exp-header">
-        <div>
-          <div class="exp-co">Entuple Technologies</div>
-          <div class="exp-role">Design and Verification Intern · India</div>
-        </div>
-        <div class="exp-date">MAY 2022 – JUN 2022</div>
+      <div class="exp-hdr">
+        <div><div class="exp-co">Entuple Technologies</div><div class="exp-role">Design and Verification Intern · India</div></div>
+        <div class="exp-dt">MAY 2022 – JUN 2022</div>
       </div>
-      <ul class="exp-bullets">
-        <li>Designed and verified <strong>RTL in Verilog</strong>, building FSM-based modular hierarchical structures enabling reuse across project modules.</li>
-        <li>Created test-benches, performed simulation & waveform debugging, elevating <strong>functional coverage to 100%</strong> across hierarchy levels.</li>
+      <ul class="exp-ul">
+        <li>Designed and verified <strong>RTL in Verilog</strong>, building FSM-based modular hierarchical structures enabling reuse across modules.</li>
+        <li>Created testbenches, performed simulation &amp; waveform debugging, elevating <strong>functional coverage to 100%</strong> across hierarchy levels.</li>
       </ul>
     </div>
   </div>
 </section>
 
-<!-- PROJECTS -->
 <section id="projects" class="proj-bg">
-  <div class="sh"><div class="sn">04</div><div class="st">Academic Projects</div><div class="sl"></div></div>
+  <div class="sh"><div class="snum">04</div><div class="stitle">Academic Projects</div><div class="sline"></div></div>
   <div class="pgrid">
     <div class="pcard">
       <div class="ptag">RTL-TO-GDSII</div>
       <div class="ptitle">16-Core Multiprocessor Network on Chip</div>
-      <div class="pdesc">Led team to architect a <strong>4×4 custom Torus NoC</strong>, cutting hop count by 50% without increasing power or area. Executed full RTL-to-GDS flow with DC, Innovus, PrimeTime & Calibre.</div>
-      <div class="ptechs">
-        <span class="tpill">Verilog</span><span class="tpill">DC Compiler</span>
-        <span class="tpill">PrimeTime</span><span class="tpill">Innovus</span>
-      </div>
+      <div class="pdesc">Led team to architect a <strong>4×4 custom Torus NoC</strong>, cutting hop count 50%. Full RTL-to-GDS flow with DC, Innovus, PrimeTime &amp; Calibre.</div>
+      <div class="ptechs"><span class="tpill">Verilog</span><span class="tpill">DC Compiler</span><span class="tpill">PrimeTime</span><span class="tpill">Innovus</span></div>
     </div>
     <div class="pcard">
       <div class="ptag">PHYSICAL DESIGN</div>
       <div class="ptitle">512-bit SRAM Design</div>
-      <div class="pdesc">Designed and simulated 512-bit SRAM with four 128-bit banks. Achieved <strong>Read SNM ≥ 200mV</strong> and <strong>Write SNM ≥ 400mV</strong>. Automated layout using SKILL scripting.</div>
-      <div class="ptechs">
-        <span class="tpill">Cadence Virtuoso</span><span class="tpill">SKILL</span>
-      </div>
+      <div class="pdesc">Four 128-bit banks. Achieved <strong>Read SNM ≥ 200mV</strong>, <strong>Write SNM ≥ 400mV</strong>. Automated layout via SKILL scripting. 100% DRC clean.</div>
+      <div class="ptechs"><span class="tpill">Cadence Virtuoso</span><span class="tpill">SKILL</span></div>
     </div>
     <div class="pcard">
       <div class="prank">TOP 3</div>
       <div class="ptag">AI/ML HARDWARE</div>
       <div class="ptitle">Systolic Array for AI/ML Accelerator</div>
-      <div class="pdesc">Built scalable <strong>4×4 systolic array</strong> shrinking layout area by ~19%. Conducted EMIR analysis for power integrity. Elevated power efficiency by ~10%.</div>
-      <div class="ptechs">
-        <span class="tpill">Cadence Virtuoso</span><span class="tpill">EMIR</span>
-      </div>
+      <div class="pdesc">Scalable <strong>4×4 systolic array</strong> shrinking area by ~19%. EMIR analysis for power integrity. Power efficiency up ~10%.</div>
+      <div class="ptechs"><span class="tpill">Cadence Virtuoso</span><span class="tpill">EMIR</span></div>
     </div>
     <div class="pcard">
       <div class="ptag">AUTOMATION</div>
       <div class="ptitle">Layout Automation using SKILL</div>
-      <div class="pdesc">Automated layout construction for <strong>128-bit RCA</strong> in Virtuoso via SKILL scripting. Optimized code for repetitive tasks, <strong>decreasing design time by ~75%</strong>.</div>
-      <div class="ptechs">
-        <span class="tpill">Cadence Virtuoso</span><span class="tpill">SKILL Scripting</span>
-      </div>
+      <div class="pdesc">Automated 128-bit RCA layout via SKILL scripting. Optimized for repetitive tasks — <strong>design time reduced by ~75%</strong>.</div>
+      <div class="ptechs"><span class="tpill">Cadence Virtuoso</span><span class="tpill">SKILL Scripting</span></div>
     </div>
     <div class="pcard">
       <div class="ptag">DFT</div>
       <div class="ptitle">ATPG and Fault Simulation</div>
-      <div class="pdesc">Engineered ATPG using <strong>PODEM & D-Algorithm</strong>, reducing test patterns by ~35%. Implemented Deductive & Parallel fault simulation achieving <strong>~97% fault coverage</strong>.</div>
-      <div class="ptechs">
-        <span class="tpill">ATPG</span><span class="tpill">PODEM</span><span class="tpill">D-Algo</span>
-      </div>
+      <div class="pdesc">ATPG using <strong>PODEM &amp; D-Algorithm</strong>, reducing test patterns ~35%. Deductive &amp; Parallel fault sim achieving <strong>~97% fault coverage</strong>.</div>
+      <div class="ptechs"><span class="tpill">ATPG</span><span class="tpill">PODEM</span><span class="tpill">D-Algo</span></div>
     </div>
     <div class="pcard">
       <div class="ptag">PROCESSOR DESIGN</div>
       <div class="ptitle">16-Core CPU Microarchitecture</div>
-      <div class="pdesc">Integrated forwarding units & IFRF into <strong>4-stage pipelined CPU core</strong>. Enhanced ALU: multiplier area ↓32%, adder-subtractor ↓26%, shifter ↓6%.</div>
-      <div class="ptechs">
-        <span class="tpill">Verilog</span><span class="tpill">Synthesis</span><span class="tpill">STA</span>
-      </div>
+      <div class="pdesc">Forwarding units &amp; IFRF in <strong>4-stage pipelined CPU</strong>. ALU: multiplier ↓32%, adder-subtractor ↓26%, shifter ↓6%.</div>
+      <div class="ptechs"><span class="tpill">Verilog</span><span class="tpill">Synthesis</span><span class="tpill">STA</span></div>
     </div>
   </div>
 </section>
 
-<!-- RESEARCH -->
 <section id="research">
-  <div class="sh"><div class="sn">05</div><div class="st">Research & Publications</div><div class="sl"></div></div>
+  <div class="sh"><div class="snum">05</div><div class="stitle">Research &amp; Publications</div><div class="sline"></div></div>
   <div class="rlist">
     <div class="rcard">
       <div class="rbadge">SPRINGER · PATENT PENDING</div>
       <div class="rname">DHRISHTA</div>
-      <div class="rdesc">Led project team to publish research paper in <strong>Springer</strong>. Currently working on patent filing. The project won <strong>10+ national and international awards</strong> for innovation in the field.</div>
+      <div class="rdesc">Led project team to publish in <strong>Springer</strong>. Patent filing in progress. Won <strong>10+ national &amp; international awards</strong> for innovation.</div>
     </div>
     <div class="rcard">
       <div class="rbadge">CO-AUTHORED PATENT</div>
       <div class="rname">YOJAKK</div>
-      <div class="rdesc">Co-authored and registered a patent for a <strong>Modular Conversion Kit</strong> to convert a bullock cart into a tractor trolley — a sustainable engineering innovation addressing agricultural mobility.</div>
+      <div class="rdesc">Co-authored and registered a patent for a <strong>Modular Conversion Kit</strong> converting a bullock cart into a tractor trolley — sustainable agricultural engineering innovation.</div>
     </div>
   </div>
 </section>
 
-<!-- CONTACT -->
 <section id="contact">
-  <div class="sh"><div class="sn">06</div><div class="st">Contact</div><div class="sl"></div></div>
+  <div class="sh"><div class="snum">06</div><div class="stitle">Contact</div><div class="sline"></div></div>
   <div class="cgrid">
     <div class="ctext">
-      <h2>Let's Build<br/>Something Real.</h2>
+      <h2>Let's Build<br/><em>Something Real.</em></h2>
       <p>Open to full-time roles, research collaborations, and cutting-edge VLSI opportunities. Let's connect.</p>
       <div class="clinks">
         <a class="clink" href="mailto:sdegaonk@usc.edu">sdegaonk@usc.edu</a>
@@ -499,16 +443,131 @@ footer{position:relative;z-index:10;padding:1.8rem 4rem;
       <input type="email" placeholder="Your Email"/>
       <input type="text" placeholder="Subject / Company"/>
       <textarea placeholder="Your message..."></textarea>
-      <button class="btn-p" style="align-self:flex-start">TRANSMIT MESSAGE</button>
+      <button class="btn-gold" style="align-self:flex-start">TRANSMIT MESSAGE</button>
     </div>
   </div>
 </section>
 
-<!-- FOOTER -->
 <footer>
   <div class="fl">SUYASH DEGAONKAR · VLSI ENGINEER</div>
   <div class="fr">© 2026 · USC MS EE · ALL SYSTEMS NOMINAL</div>
 </footer>
 
+<script>
+const canvas=document.getElementById('chip-canvas');
+const ctx=canvas.getContext('2d');
+function resize(){canvas.width=window.innerWidth;canvas.height=window.innerHeight;}
+resize();
+window.addEventListener('resize',()=>{resize();initTraces();initVias();initCells();});
+
+const GOLD='rgba(245,200,66,';
+const COPPER='rgba(232,135,74,';
+const CYAN='rgba(0,212,255,';
+const CELL=40;
+const traces=[];
+
+function initTraces(){
+  traces.length=0;
+  const cols=Math.ceil(canvas.width/CELL)+2;
+  const rows=Math.ceil(canvas.height/CELL)+2;
+  for(let r=0;r<rows;r++){
+    if(Math.random()<0.35){
+      const y=r*CELL;
+      const x1=Math.floor(Math.random()*cols*0.5)*CELL;
+      const x2=x1+Math.floor(Math.random()*8+2)*CELL;
+      const layer=Math.random()<0.5?'M1':'M2';
+      traces.push({type:'H',y,x1,x2,color:layer==='M1'?GOLD:COPPER,pulses:[]});
+    }
+  }
+  for(let c=0;c<cols;c++){
+    if(Math.random()<0.3){
+      const x=c*CELL;
+      const y1=Math.floor(Math.random()*rows*0.5)*CELL;
+      const y2=y1+Math.floor(Math.random()*8+2)*CELL;
+      const layer=Math.random()<0.5?'M1':'M2';
+      traces.push({type:'V',x,y1,y2,color:layer==='M1'?GOLD:COPPER,pulses:[]});
+    }
+  }
+}
+initTraces();
+
+const vias=[];
+function initVias(){
+  vias.length=0;
+  const ht=traces.filter(t=>t.type==='H');
+  const vt=traces.filter(t=>t.type==='V');
+  ht.forEach(h=>{vt.forEach(v=>{
+    if(v.x>=h.x1&&v.x<=h.x2&&h.y>=v.y1&&h.y<=v.y2)
+      if(Math.random()<0.6) vias.push({x:v.x,y:h.y,phase:Math.random()*Math.PI*2});
+  });});
+}
+initVias();
+
+const cells=[];
+function initCells(){
+  cells.length=0;
+  const count=Math.floor(canvas.width*canvas.height/120000);
+  const labels=['INV','NAND','NOR','FF','BUF','MUX','AND','XOR'];
+  for(let i=0;i<count;i++){
+    cells.push({
+      x:Math.random()*(canvas.width-120)+60,
+      y:Math.random()*(canvas.height-60)+30,
+      w:Math.floor(Math.random()*4+2)*CELL,h:CELL,
+      label:labels[Math.floor(Math.random()*labels.length)],
+      alpha:Math.random()*0.5+0.1
+    });
+  }
+}
+initCells();
+
+function spawnPulse(){
+  const t=traces[Math.floor(Math.random()*traces.length)];
+  if(t) t.pulses.push({pos:0,speed:Math.random()*0.008+0.004,color:Math.random()<0.3?CYAN:t.color});
+}
+
+let frame=0;
+function draw(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  cells.forEach(c=>{
+    ctx.strokeStyle=`rgba(245,200,66,${c.alpha*0.3})`;ctx.lineWidth=0.5;
+    ctx.strokeRect(c.x,c.y,c.w,c.h);
+    ctx.fillStyle=`rgba(245,200,66,${c.alpha*0.04})`;ctx.fillRect(c.x,c.y,c.w,c.h);
+    ctx.fillStyle=`rgba(245,200,66,${c.alpha*0.25})`;
+    ctx.font="8px 'Share Tech Mono',monospace";ctx.textAlign='center';
+    ctx.fillText(c.label,c.x+c.w/2,c.y+c.h/2+3);
+  });
+  traces.forEach(t=>{
+    ctx.strokeStyle=t.color+'0.12)';ctx.lineWidth=1;ctx.beginPath();
+    if(t.type==='H'){ctx.moveTo(t.x1,t.y);ctx.lineTo(t.x2,t.y);}
+    else{ctx.moveTo(t.x,t.y1);ctx.lineTo(t.x,t.y2);}
+    ctx.stroke();
+  });
+  vias.forEach(v=>{
+    const p=Math.sin(frame*0.03+v.phase)*0.5+0.5;
+    ctx.fillStyle=`rgba(160,196,255,${0.08+p*0.12})`;
+    ctx.beginPath();ctx.arc(v.x,v.y,2.5,0,Math.PI*2);ctx.fill();
+    ctx.strokeStyle=`rgba(160,196,255,${0.2+p*0.2})`;ctx.lineWidth=0.5;
+    ctx.beginPath();ctx.arc(v.x,v.y,2.5,0,Math.PI*2);ctx.stroke();
+  });
+  if(frame%18===0) spawnPulse();
+  traces.forEach(t=>{
+    t.pulses=t.pulses.filter(p=>{
+      p.pos+=p.speed;if(p.pos>1)return false;
+      const a=1-Math.pow(p.pos*2-1,4);
+      let px,py;
+      if(t.type==='H'){px=t.x1+(t.x2-t.x1)*p.pos;py=t.y;}
+      else{px=t.x;py=t.y1+(t.y2-t.y1)*p.pos;}
+      const g=ctx.createRadialGradient(px,py,0,px,py,6);
+      g.addColorStop(0,p.color+(a*0.9)+')');g.addColorStop(1,p.color+'0)');
+      ctx.fillStyle=g;ctx.beginPath();ctx.arc(px,py,6,0,Math.PI*2);ctx.fill();
+      ctx.fillStyle=p.color+(Math.min(a*1.5,1))+')';
+      ctx.beginPath();ctx.arc(px,py,2,0,Math.PI*2);ctx.fill();
+      return true;
+    });
+  });
+  frame++;requestAnimationFrame(draw);
+}
+draw();
+</script>
 </body>
 </html>
